@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% load fontawesome %}
+{% load static %}
+
+{% block breadcrumbs %}
+	<ul class="nav__breadcrumbs breadcrumbs">
+		<li class="breadcrumbs__item">
+            <a class="text text--title-h2 text--no-link text--inherit-color" href="{% url 'home' %}">LigerCat</a>
+        </li>
+        <li class="breadcrumbs__item breadcrumbs__item--active">
+            <a class="text text--title-h2 text--no-link text--inherit-color" href="{% url 'article_search' %}">Articles</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+	<section class="float-item float-item--position-left">
+		<div class="float-item__header">
+			<h2 class="text text--title-h2 text--align-center">
+				Articles
+				<img class="img img--inline-title margin-left-half margin-right-half"
+					src="{% static 'search_engine/images/arrow-right.png' %}"
+					alt="arrow pointing right to">
+				Genes
+			</h2>
+		</div>
+		<form id="articles-search" class="form float-item__body" action="{% url 'article_searching' %}" method="post">
+			{% csrf_token %}
+			{{ articles_formset.management_form }}
+		    {% for this_form in articles_formset %}
+				<div class="form__item control-group">
+					<label for="{{ this_form.search_id.id_for_label }}" class="sr-only">Enter a PMID to search for genes</label>
+					<input class="control-group__input" type="text" placeholder="Add PMID..."
+				       name="{{ this_form.search_id.name }}"
+				       id="{{ this_form.search_id.id_for_label }}"
+				       {% if this_form.search_id.value != None %} value="{{ this_form.search_id.value|stringformat:'s' }}" {% endif %}
+					       maxlength="{{ this_form.search_id.field.max_length }}"
+				       {% if this_form.search_id.field.required %} required {% endif %}>
+		            <button type="button" class="control-group__button" onclick="removeForm(this)">
+		            	{% fontawesome_icon 'times' %}
+		            </button>
+				</div>
+		    {% endfor %}
+		</form>
+		<div id="articles-search-empty" class="form--empty">
+	    	<div class="form__item control-group">
+				<label for="{{ articles_formset.empty_form.search_id.id_for_label }}" class="sr-only">Enter a PMID to search for genes</label>
+				<input class="control-group__input" type="text" placeholder="Add PMID..."
+			       name="{{ articles_formset.empty_form.search_id.name }}"
+			       id="{{ articles_formset.empty_form.search_id.id_for_label }}"
+			       {% if articles_formset.empty_form.search_id.value != None %} value="{{ articles_formset.empty_form.search_id.value|stringformat:'s' }}" {% endif %}
+				       maxlength="{{ articles_formset.empty_form.search_id.field.max_length }}"
+			       {% if articles_formset.empty_form.search_id.field.required %} required {% endif %}>
+	            <button type="button" class="control-group__button" onclick="removeForm(this)">
+	            	{% fontawesome_icon 'times' %}
+	            </button>
+			</div>
+	    </div>
+        <div class="float-item__footer">
+        	<div class="form__item control-group">
+				<label for="article-input" class="sr-only">Enter a PMID to search for genes</label>
+	            <input id="article-input" class="control-group__input" type="text" placeholder="Add PMID...">
+	            <button type="submit" class="control-group__button"
+	            	data-form-selector="#articles-search"
+	            	data-empty-form-selector="#articles-search-empty"
+	            	onclick="addForm(this)">
+	            	{% fontawesome_icon 'plus' %}
+	            </button>
+			</div>
+	        <a class="margin-left text text--link" href="#import-articles" rel="modal:open">Import articles</a>
+	        <div class="text--align-center margin-top">
+	        	<a href="{% url 'home' %}" class="button button--outline">Cancel</a>
+	        	<button class="button" type="submit" form="articles-search">Search</button>
+	        </div>
+        </div>
+	</section>
+
+	<div class="content-container">
+		<article class="layout-container centered-contents">
+			<section class="display-container layout-container__item margin-top-double">
+				<div class="margin-bottom">
+					<h3 class="text text--title-h3 margin-bottom">Available MeSH terms</h3>
+					<ul class="list list--none">
+						<li class="control-group control-group--suggestion margin-bottom">
+							<div class="control-group__input">
+								<h4 class="text margin-bottom">
+									<a class="text text--link" href="">"Premature birth"[mh]</a>
+								</h4>
+							</div>
+							<button type="button" class="control-group__button">
+								{% fontawesome_icon 'plus' %}
+							</button>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<h3 class="text text--title-h3 margin-bottom">Suggested articles</h3>
+					<ul class="list list--none">
+						{% for article in article_suggestions %}
+							<li class="control-group control-group--suggestion margin-bottom">
+								<div class="control-group__input">
+									<h4 class="text margin-bottom">
+										<a href="" class="text text--link">
+											<span class="text--small">PMID</span>
+											{{ article.id }}
+										</a>
+									</h4>
+									<p class="text text--small margin-bottom">{{ article.title }}</p>
+								</div>
+								<button type="button" class="control-group__button">
+									{% fontawesome_icon 'plus' %}
+								</button>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+			</section>
+		</article>
+	</div>
+{% endblock %}

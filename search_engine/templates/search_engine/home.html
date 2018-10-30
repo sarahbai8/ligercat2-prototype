@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% load fontawesome %}
+{% load static %}
+
+{% block content %}
+	<div class="app__hero">
+		<h1 class="text text--title-h1">What would you like to find?</h1>
+	</div>
+	<article>
+		<section class="float-item float-item--position-left">
+			<div class="float-item__header">
+				<h2 class="text text--title-h2 text--align-center">
+					Articles
+					<img class="img img--inline-title margin-left-half margin-right-half"
+						src="{% static 'search_engine/images/arrow-right.png' %}"
+						alt="arrow pointing right to">
+					Genes
+				</h2>
+			</div>
+			<div class="float-item__footer">
+				<form class="form" action="{% url 'article_search' %}" method="post">
+					{% csrf_token %}
+					<div class="form__item control-group">
+						<label for="article-input" class="sr-only">Enter a PMID to search for genes</label>
+			            <input id="article-input" name="article_id" class="control-group__input" type="text" placeholder="Add PMID...">
+			            <button type="submit" class="control-group__button">
+			            	{% fontawesome_icon 'plus' %}
+			            </button>
+					</div>
+		        </form>
+		        <a class="margin-left text text--link" href="#import-articles" rel="modal:open">Import articles</a>
+			</div>
+		</section>
+		<section class="float-item float-item--position-right">
+			<div class="float-item__header">
+				<h2 class="text text--title-h2 text--align-center">
+					Genes
+					<img class="img img--inline-title margin-left-half margin-right-half"
+						src="{% static 'search_engine/images/arrow-right.png' %}"
+						alt="arrow pointing right to">
+					Articles
+				</h2>
+			</div>
+			<div class="float-item__footer">
+				<form class="form" action="{% url 'gene_search' %}" method="post">
+					{% csrf_token %}
+					<div class="form__item control-group">
+						<label for="article-input" class="sr-only">Enter a gene ID to search for articles</label>
+			            <input id="article-input" class="control-group__input" type="text" placeholder="Add gene ID...">
+			            <button type="submit" class="control-group__button">
+			            	{% fontawesome_icon 'plus' %}
+			            </button>
+					</div>
+		        </form>
+		        <a class="margin-left text text--link" href="#import-genes" rel="modal:open">Import genes</a>
+			</div>
+		</section>
+	</article>
+{% endblock %}
+

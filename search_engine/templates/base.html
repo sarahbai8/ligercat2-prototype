@@ -1,0 +1,78 @@
+{% load fontawesome %}
+{% load sass_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% fontawesome_stylesheet %}
+        <link href="{% sass_src 'search_engine/styles/main.scss' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'normalize.css/normalize.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'jquery-modal/jquery.modal.min.css' %}" rel="stylesheet" type="text/css">
+        <meta charset="utf-8">
+        <title>{% block title %}LigerCat{% endblock %}</title>
+    </head>
+    <body class="app">
+        <header class="nav app__nav">
+            <img class="nav__logo" src="{% static 'search_engine/images/ligercat-logo.png' %}" alt="LigerCat logo">
+            <nav class="nav__body">
+                {% block breadcrumbs %}
+                <ul class="nav__breadcrumbs breadcrumbs">
+                    <li class="breadcrumbs__item breadcrumbs__item--active">
+                        <a class="text text--title-h2 text--no-link text--inherit-color"
+                            href="{% url 'home' %}">
+                            LigerCat
+                        </a>
+                    </li>
+                </ul>
+                {% endblock %}
+                {% block actions %}
+                <ul class="nav__actions list list--none layout-container">
+                    <li class="layout-container__item">
+                        <a class="text text--link" href="#help-modal" rel="modal:open">Help</a>
+                    </li>
+                </ul>
+                {% endblock %}
+            </nav>
+        </header>
+        <main class="app__content">
+            {% block content %}{% endblock %}
+        </main>
+        {% block modals %}
+            <div id="help-modal" class="modal">
+                <h2 class='text text--title-h2 margin-bottom'>Help</h2>
+                <h4 class='text text--emphasized margin-bottom-half'>What is LigerCat?</h4>
+                <p class="text margin-bottom-double"> LigerCat is a bidirectional search engine, using PubMed, dbSNP, and Gene, that allows the user to use genes to find articles or to use articles to find genes.</p>
+                <h4 class='text text--emphasized margin-bottom-half'>How was LigerCat built?</h4>
+                <p class="text margin-bottom-double">The data used to power LigerCat is pulled on a schedule via a <a target="_blank" rel="noreferrer" class="text text--link" href="https://julialang.org/">Julia</a> script from <a target="_blank" rel="noreferrer" class="text text--link" href="https://www.ncbi.nlm.nih.gov/Class/MLACourse/Original8Hour/Entrez/">NCBI Entrez</a>. This data is loaded into a <a target="_blank" rel="noreferrer" class="text text--link" href="https://www.mysql.com/">MySQL</a> database that supports a <a target="_blank" rel="noreferrer" class="text text--link" href="https://www.djangoproject.com/">Django</a> web app. The LigerCat interface is a tradtional website (not single page app) built using the Django templating language.</p>
+                <h4 class='text text--emphasized margin-bottom-half'>Who built LigerCat?</h4>
+                <p class="text margin-bottom-double">LigerCat was built by Sarah Bai in partnership with Dr. Neil Sarkar and Dr. Elizabeth Chen at the <a target="_blank" rel="noreferrer" class="text text--link" href="https://www.brown.edu/academics/medical/about-us/research/centers-institutes-and-programs/biomedical-informatics/">Brown Center for Biomedical Informatics</a>.</p>
+                <div class="margin-top-double text--align-right">
+                    <a href="#" rel="modal:close" class="button button--outline">Close</a>
+                </div>
+            </div>
+            <div id="import-articles" class="modal">
+                <h2 class='text text--title-h2 margin-bottom'>Import articles</h2>
+                <p class='text margin-bottom'>Copy in <span class="text--emphasized">MeSH terms</span> or <span class="text--emphasized">PMIDs</span>. Each term or id should be on its own line.</p>
+                <textarea class="textarea" cols="30" rows="10" placeholder="MeSH terms or PMIDs here..."></textarea>
+                <div class="margin-top-double text--align-right">
+                    <a href="#" rel="modal:close" class="button button--outline">Cancel</a>
+                    <a href="#" rel="modal:close" class="button">Import</a>
+                </div>
+            </div>
+            <div id="import-genes" class="modal">
+                <h2 class='text text--title-h2 margin-bottom'>Import genes</h2>
+                <p class='text margin-bottom'>Copy in <span class="text--emphasized">gene IDs</span>. Each id should be on its own line.</p>
+                <textarea class="textarea" cols="30" rows="10" placeholder="Gene IDs here..."></textarea>
+                <div class="margin-top-double text--align-right">
+                    <a href="#" rel="modal:close" class="button button--outline">Cancel</a>
+                    <a href="#" rel="modal:close" class="button">Import</a>
+                </div>
+            </div>
+        {% endblock %}
+
+        <script src="{% static 'jquery/dist/jquery.slim.min.js' %}"></script>
+        <script src="{% static 'jquery-modal/jquery.modal.min.js' %}"></script>
+        <script src="{% static 'search_engine/scripts/main.js' %}"></script>
+    </body>
+</html>

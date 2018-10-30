@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load fontawesome %}
+
+{% block content %}
+    <article>
+        <div>
+            <h2>Import articles</h2>
+            <form action="" method="post" id="articles-import">
+                <label for="articles-data" class="sr-only">
+                    Copy in <span>MeSH terms</span> or <span>PMIDs</span> to find genes. Each term or id should be on its own line.
+                </label>
+                <textarea name="data" id="articles-data" rows="15"></textarea>
+            </form>
+        </div>
+        <div>
+            <h3>Available MeSH terms</h3>
+            <ul>
+                <li>
+                    <h4>
+                        <a href="" onclick="">"Premature birth"[mh]</a>
+                    </h4>
+                    <button type="button">
+                        {% fontawesome_icon 'plus' %}
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <button type="button">Cancel</button>
+            <button type="submit" form="articles-import">Import </button>
+        </div>
+    </article>
+{% endblock %}

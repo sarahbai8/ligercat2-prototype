@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load fontawesome %}
+{% load static %}
+
+{% block breadcrumbs %}
+	<ul class="nav__breadcrumbs breadcrumbs">
+		<li class="breadcrumbs__item">
+            <a class="text text--title-h2 text--no-link text--inherit-color" href="{% url 'home' %}">LigerCat</a>
+        </li>
+        <li class="breadcrumbs__item">
+            <a class="text text--title-h2 text--no-link text--inherit-color" href="{% url 'article_search' %}">Articles</a>
+        </li>
+        <li class="breadcrumbs__item breadcrumbs__item--active">
+            <a class="text text--title-h2 text--no-link text--inherit-color" href="{% url 'article_results' '27490719,22491902,25714003' %}">Genes</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block actions %}
+<ul class="nav__actions list list--none layout-container">
+	<li class="layout-container__item">
+        <a class="text text--link" href="/">Download</a>
+    </li>
+    <li class="layout-container__item">
+        <a class="text text--link" href="/">Share</a>
+    </li>
+    <li class="layout-container__item">
+        <a class="text text--link" href="#help-modal" rel="modal:open">Help</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+	<div class="content-container">
+		<div class="layout-container centered-contents layout-container--align-baseline margin-top-double margin-bottom">
+			<div class="layout-container__item">
+				<p class="text text--deemphasized-gray">
+					Found <span class="text--emphasized">{{ meta.num_found }} gene{{ meta.num_found|pluralize }}</span> from <span class="text--emphasized">{{ meta.num_valid }} of {{ meta.num_entered }} PMID{{ meta.num_entered|pluralize }}</span> and <span class="text--emphasized">{{ meta.num_mesh }} MeSH term{{ meta.num_mesh|pluralize }}</span>
+				</p>
+			</div>
+			<div class="layout-container__item text text--align-right">
+				<label for="sort-options" class="text text--deemphasized-gray margin-right-half">Sort by</label>
+				<select name="sort-options" id="sort-options" class="select">
+					<option value="recent">Recently updated</option>
+					<option value="alphabet">Alphabetical</option>
+					<option value="popular">Popular</option>
+				</select>
+			</div>
+		</div>
+		<table class="table centered-contents">
+			<thead>
+				<tr class="table__header">
+					<th class="table__item"></th>
+					<th class="table__item">Gene name</th>
+					<th class="table__item">Gene description</th>
+					<th class="table__item table__item--right">Related articles</th>
+					<th class="table__item table__item--right">Related SNPs</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for gene in gene_results %}
+					<tr>
+						<td class="table__item text text--deemphasized-gray text--small">
+							{{ forloop.counter }}
+						</td>
+						<td class="table__item">
+							<a href="{% url 'gene_detail' gene.id %}" class="text text--link">{{ gene.name }}</a>
+						</td>
+						<td class="table__item">
+							{{ gene.short_description }}
+						</td>
+						<td class="table__item table__item--right">
+							{{ gene.num_articles }}
+						</td>
+						<td class="table__item table__item--right">
+							{{ gene.num_snps }}
+						</td>
+					</tr>
+				{% empty %}
+					<tr class="">
+                        <td colspan="5" class="table__item">
+                            <p class="text text--align-center">
+                                No genes found. Please <a href="{% url 'article_search' %}" class="text text--link">try searching again</a>
+                            </p>
+                        </td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

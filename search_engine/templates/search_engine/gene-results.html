@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% load fontawesome %}
+{% load static %}
+
+{% block breadcrumbs %}
+    <ul class="nav__breadcrumbs breadcrumbs">
+        <li class="breadcrumbs__item">
+            <a class="text text--ellipsis text--title-h2 text--no-link text--inherit-color" href="{% url 'home' %}">LigerCat</a>
+        </li>
+        <li class="breadcrumbs__item">
+            <a class="text text--ellipsis text--title-h2 text--no-link text--inherit-color" href="{% url 'gene_search' %}">Genes</a>
+        </li>
+        <li class="breadcrumbs__item breadcrumbs__item--active">
+            <p class="text text--ellipsis text--title-h2 text--no-link text--inherit-color">Articles</p>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block actions %}
+<ul class="nav__actions list list--none layout-container">
+    <li class="layout-container__item">
+        <a class="text text--link" href="/">Download</a>
+    </li>
+    <li class="layout-container__item">
+        <a class="text text--link" href="/">Share</a>
+    </li>
+    <li class="layout-container__item">
+        <a class="text text--link" href="#help-modal" rel="modal:open">Help</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+    <div class="content-container">
+        <div class="layout-container centered-contents layout-container--align-baseline margin-top-double margin-bottom">
+            <div class="layout-container__item">
+                <p class="text text--deemphasized-gray">
+                    Found <span class="text--emphasized">{{ meta.num_found }} article{{ meta.num_found|pluralize }}</span> from <span class="text--emphasized">{{ meta.num_valid }} of {{ meta.num_entered }} gene ID{{ meta.num_entered|pluralize }}</span>
+                </p>
+            </div>
+            <div class="layout-container__item text text--align-right">
+                <label for="sort-options" class="text text--deemphasized-gray margin-right-half">Sort by</label>
+                <select name="sort-options" id="sort-options" class="select">
+                    <option value="recent">Recently updated</option>
+                    <option value="alphabet">Alphabetical</option>
+                    <option value="popular">Popular</option>
+                </select>
+            </div>
+        </div>
+        <table class="table centered-contents">
+            <thead>
+                <tr class="table__header">
+                    <th class="table__item"></th>
+                    <th class="table__item">Article title</th>
+                    <th class="table__item">Published journal</th>
+                    <th class="table__item table__item--right">Related genes</th>
+                    <th class="table__item table__item--right">Related SNPs</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for article in article_results %}
+                    <tr>
+                        <td class="table__item text text--deemphasized-gray text--small">
+                            {{ forloop.counter }}
+                        </td>
+                        <td class="table__item">
+                            <a href="{% url 'article_detail' search_query article.id %}" class="text text--link">{{ article.title }}</a>
+                        </td>
+                        <td class="table__item">
+                            {{ article.journal_name }}
+                        </td>
+                        <td class="table__item table__item--right">
+                            {{ article.num_genes }}
+                        </td>
+                        <td class="table__item table__item--right">
+                            {{ article.num_snps }}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr class="">
+                        <td colspan="5" class="table__item">
+                            <p class="text text--align-center">
+                                No article found. Please <a href="{% url 'gene_search' %}" class="text text--link">try searching again</a>
+                            </p>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

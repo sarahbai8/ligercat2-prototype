@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% load fontawesome %}
+{% load static %}
+
+{% block breadcrumbs %}
+    <ul class="nav__breadcrumbs breadcrumbs">
+        <li class="breadcrumbs__item">
+            <a class="text text--ellipsis text--title-h2 text--no-link text--inherit-color" href="{% url 'home' %}">LigerCat</a>
+        </li>
+        <li class="breadcrumbs__item breadcrumbs__item--active">
+            <p class="text text--ellipsis text--title-h2 text--inherit-color">Genes</p>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+    <section class="float-item float-item--position-left">
+        <div class="float-item__header">
+            <h2 class="text text--title-h2 text--align-center">
+                Genes
+                <img class="img img--inline-title margin-left-half margin-right-half"
+                    src="{% static 'search_engine/images/arrow-right.png' %}"
+                    alt="arrow pointing right to">
+                Articles
+            </h2>
+        </div>
+        <form id="genes-search" class="form float-item__body" action="{% url 'gene_searching' %}" method="post">
+            {% csrf_token %}
+            {{ genes_formset.management_form }}
+            {% for this_form in genes_formset %}
+                <div class="form__item control-group">
+                    <label for="{{ this_form.search_id.id_for_label }}" class="sr-only">Enter a gene ID to search for genes</label>
+                    <input class="control-group__input" type="text" placeholder="Add gene ID..."
+                       name="{{ this_form.search_id.name }}"
+                       id="{{ this_form.search_id.id_for_label }}"
+                       {% if this_form.search_id.value != None %} value="{{ this_form.search_id.value|stringformat:'s' }}" {% endif %}
+                           maxlength="{{ this_form.search_id.field.max_length }}"
+                       {% if this_form.search_id.field.required %} required {% endif %}>
+                    <button type="button" class="control-group__button" onclick="removeForm(this)">
+                        {% fontawesome_icon 'times' %}
+                    </button>
+                </div>
+            {% endfor %}
+        </form>
+        <div id="genes-search-empty" class="form--empty">
+            <div class="form__item control-group">
+                <label for="{{ genes_formset.empty_form.search_id.id_for_label }}" class="sr-only">Enter an ID to search for genes</label>
+                <input class="control-group__input" type="text" placeholder="Add gene ID..."
+                   name="{{ genes_formset.empty_form.search_id.name }}"
+                   id="{{ genes_formset.empty_form.search_id.id_for_label }}"
+                   {% if genes_formset.empty_form.search_id.value != None %} value="{{ genes_formset.empty_form.search_id.value|stringformat:'s' }}" {% endif %}
+                       maxlength="{{ genes_formset.empty_form.search_id.field.max_length }}"
+                   {% if genes_formset.empty_form.search_id.field.required %} required {% endif %}>
+                <button type="button" class="control-group__button" onclick="removeForm(this)">
+                    {% fontawesome_icon 'times' %}
+                </button>
+            </div>
+        </div>
+        <div class="float-item__footer">
+            <div class="form__item control-group">
+                <label for="article-input" class="sr-only">Enter an ID to search for genes</label>
+                <input id="article-input" class="control-group__input" type="text" placeholder="Add gene ID...">
+                <button type="submit" class="control-group__button"
+                    data-form-selector="#genes-search"
+                    data-empty-form-selector="#genes-search-empty"
+                    onclick="addForm(this)">
+                    {% fontawesome_icon 'plus' %}
+                </button>
+            </div>
+            <a class="margin-left text text--link" href="#import-genes" rel="modal:open">Import genes</a>
+            <div class="text--align-center margin-top">
+                <a href="{% url 'home' %}" class="button button--outline">Cancel</a>
+                <button class="button" type="submit" form="genes-search">Search</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="content-container">
+        <article class="layout-container centered-contents">
+            <section class="display-container layout-container__item margin-top-double">
+                <div>
+                    <h3 class="text text--title-h3 margin-bottom">Suggested genes</h3>
+                    <ul class="list list--none">
+                        {% for gene in genes_suggestions %}
+                            <li class="control-group control-group--suggestion margin-bottom">
+                                <div class="control-group__input">
+                                    <h4 class="text margin-bottom">
+                                        <a href="" class="text text--link">
+                                            <span class="text--small">Gene ID</span>
+                                            {{ gene.id }}
+                                        </a>
+                                    </h4>
+                                    <p class="text text--small margin-bottom">{{ gene.short_description }}</p>
+                                </div>
+                                <button type="button" class="control-group__button">
+                                    {% fontawesome_icon 'plus' %}
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+        </article>
+    </div>
+{% endblock %}

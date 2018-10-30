@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% load fontawesome %}
+{% load static %}
+
+{% block breadcrumbs %}
+    <ul class="nav__breadcrumbs breadcrumbs">
+        <li class="breadcrumbs__item">
+            <a class="text text--ellipsis text--title-h2 text--no-link text--inherit-color" href="{% url 'home' %}">LigerCat</a>
+        </li>
+        <li class="breadcrumbs__item">
+            <a class="text text--ellipsis text--title-h2 text--no-link text--inherit-color" href="{% url 'article_search' %}">Articles</a>
+        </li>
+        <li class="breadcrumbs__item">
+            <a class="text text--ellipsis text--title-h2 text--no-link text--inherit-color" href="{% url 'article_results' '27490719,22491902,25714003' %}">Genes</a>
+        </li>
+        {% if gene %}
+            <li class="breadcrumbs__item breadcrumbs__item--active">
+                <a class="text text--ellipsis text--title-h2 text--no-link text--inherit-color" href="{% url 'gene_detail' gene.id %}">{{ gene.name }}</a>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+{% block actions %}
+<ul class="nav__actions list list--none layout-container">
+    <li class="layout-container__item">
+        <a class="text text--link" href="/">Download</a>
+    </li>
+    <li class="layout-container__item">
+        <a class="text text--link" href="/">Share</a>
+    </li>
+    <li class="layout-container__item">
+        <a class="text text--link" href="#help-modal" rel="modal:open">Help</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+    <div class="content-container">
+        <div class="layout-container centered-contents margin-top-double">
+            <div class="layout-container__item layout-container__item--auto-width layout-container__item--no-shrink margin-top-double margin-right-triple">
+                <h3 class="text text--title-h3 margin-bottom">On this page</h3>
+                <ul class="list list--none">
+                    <li class="margin-bottom-half"><a href="#details" class="text text--link">Details</a></li>
+                    <li class="margin-bottom-half"><a href="#articles" class="text text--link">{{ num_articles }} related article{{ num_articles|pluralize }}</a></li>
+                    <li class="margin-bottom-half"><a href="#snps" class="text text--link">{{ num_snps }} related SNP{{ num_snps|pluralize }}</a></li>
+                </ul>
+            </div>
+            <div class="layout-container__item layout-container__item--full-width">
+                <section id="details" class="display-container display-container--with-bg">
+                    <h2 class="text text--title-h2 margin-bottom">
+                        {{ gene.name }}
+                        <span class="margin-left text text--deemphasized-gray">ID# {{ gene.id }}</span>
+                    </h2>
+                    <div class="margin-bottom">
+                        <h3 class="text text--title-h3 margin-bottom-half">Description</h3>
+                        <p class="text">
+                            {% if gene.description %}
+                                {{ gene.description }}
+                            {% else %}
+                                {{ gene.short_description }}
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="layout-container layout-container--align-baseline">
+                        <div class="layout-container__item">
+                            <h3 class="text text--title-h3 margin-bottom-half">
+                                Location
+                                <span class="margin-left text">{{ gene.location }}</span>
+                            </h3>
+                        </div>
+                        <div class="layout-container__item text--align-right">
+                            <a href="https://www.ncbi.nlm.nih.gov/gene/{{ gene.id }}" target="_blank" rel="noreferrer" class="text text--link">See full details</a>
+                        </div>
+                    </div>
+                </section>
+                <section id="articles" class="margin-top-double margin-bottom display-container--bottom-separator">
+                    <h3 class="text text--title-h3 margin-left margin-bottom">{{ num_articles }} related article{{ num_articles|pluralize }}</h3>
+                    {% if related_articles %}
+                        <table class="table">
+                            <tr class="table__header">
+                                <th class="table__item"></th>
+                                <th class="table__item">Article ID</th>
+                                <th class="table__item">Article title</th>
+                                <th class="table__item">Journal name</th>
+                            </tr>
+                            {% for article in related_articles %}
+                                <tr>
+                                    <td class="table__item text text--deemphasized-gray text--small">
+                                        {{ forloop.counter }}
+                                    </td>
+                                    <td class="table__item">
+                                        <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ article.id }}" target="_blank" rel="noreferrer" class="text text--link">{{ article.id }}</a>
+                                    </td>
+                                    <td class="table__item">{{ article.title }}</td>
+                                    <td class="table__item">{{ article.journal_name }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                </section>
+                <section id="snps" class="margin-top-double margin-bottom display-container--bottom-separator">
+                    <h3 class="text text--title-h3 margin-left margin-bottom">{{ num_snps }} related SNP{{ num_snps|pluralize }}</h3>
+                    {% if related_snps %}
+                        <table class="table">
+                            <tr class="table__header">
+                                <th class="table__item"></th>
+                                <th class="table__item">SNP ID</th>
+                                <th class="table__item">Related articles</th>
+                                <th class="table__item">Chromosome</th>
+                                <th class="table__item">Polymorphism</th>
+                            </tr>
+                            {% for snp in related_snps %}
+                                <tr>
+                                    <td class="table__item text text--deemphasized-gray text--small">
+                                        {{ forloop.counter }}
+                                    </td>
+                                    <td class="table__item">
+                                        <a href="https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs={{ snp.id }}" target="_blank" rel="noreferrer" class="text text--link">{{ snp.id }}</a>
+                                    </td>
+                                    <td class="table__item">
+                                        {% for article in snp.article_set.all %}
+                                            <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{ article.id }}" target="_blank" rel="noreferrer" class="text text--link">{{ article.id }}</a>{% if forloop.last is False %}, {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="table__item">{{ snp.chromosome_number }}</td>
+                                    <td class="table__item">{{ snp.observed_bases }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    {% endif %}
+                </section>
+            </div>
+        </div>
+    </div>
+{% endblock %}
