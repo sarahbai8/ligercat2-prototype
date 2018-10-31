@@ -1,0 +1,78 @@
+@font-face {
+    font-family: "Roboto";
+    font-weight: $font-weight-regular;
+    src: url("../fonts/Roboto-Regular.ttf");
+}
+@font-face {
+    font-family: "Roboto";
+    font-weight: $font-weight-medium;
+    src: url("../fonts/Roboto-Medium.ttf");
+}
+
+%text {
+    font-family: Roboto, Arial, sans-serif;
+    color: $color-text-black;
+}
+
+.text {
+    @extend %text;
+
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    font-weight: $font-weight-regular;
+
+    &--title {
+        &-h1 {
+            color: $color-text-blue;
+            font-size: 72px;
+            font-weight: $font-weight-medium;
+        }
+        &-h2 {
+            color: $color-text-blue;
+            font-size: 24px;
+            font-weight: $font-weight-medium;
+        }
+        &-h3 {
+            color: $color-text-gray;
+            font-size: 20px;
+            font-weight: $font-weight-medium;
+        }
+    }
+    &--emphasized {
+        color: $color-text-black;
+        font-weight: $font-weight-medium;
+    }
+    &--deemphasized-gray {
+        color: $color-text-gray;
+    }
+    &--deemphasized-blue {
+        color: $color-text-lightblue;
+    }
+    &--small {
+        font-size: 12px;
+    }
+    &--link {
+        color: $color-text-blue;
+        text-decoration: underline;
+    }
+    &--ellipsis {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    &--no-link {
+        text-decoration: none;
+    }
+    &--inherit-color {
+        color: inherit;
+    }
+    &--align {
+        &-center {
+            text-align: center;
+        }
+        &-right {
+            text-align: right;
+        }
+    }
+}

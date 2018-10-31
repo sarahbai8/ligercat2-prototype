@@ -1,0 +1,52 @@
+// from https://www.coolfields.co.uk/2016/05/text-for-screen-readers-only-updated/
+.sr-only {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    width: 1px;
+    overflow: hidden;
+    position: absolute !important;
+    word-wrap: normal !important;
+}
+
+.margin {
+    &-top {
+        margin-top: $spacing;
+
+        &-double {
+            margin-top: $spacing * 2;
+        }
+    }
+
+    &-left {
+        margin-left: $spacing;
+
+        &-half {
+            margin-left: $spacing * 0.5;
+        }
+    }
+
+    &-right {
+        margin-right: $spacing;
+
+        &-half {
+            margin-right: $spacing * 0.5;
+        }
+        &-triple {
+            margin-right: $spacing * 3;
+        }
+    }
+
+    &-bottom {
+        margin-bottom: $spacing;
+
+        &-half {
+            margin-bottom: $spacing * 0.5;
+        }
+        &-double {
+            margin-bottom: $spacing * 2;
+        }
+    }
+}
