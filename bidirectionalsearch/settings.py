@@ -10,22 +10,19 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+import dj_database_url
 import os
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6@7ybcmbeaes*8wy=)so8f9i%7=jl^xf^s6x59xpqbl=e$fqgj'
+SECRET_KEY = os.environ['LIGERCAT2_DJANGO_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.herokuapp.com']
 
 
 # Application definition
@@ -44,6 +41,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -78,15 +76,16 @@ WSGI_APPLICATION = 'bidirectionalsearch.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bidirectional_search',
-        'USER': 'bdsuser',
-        'PASSWORD': 'password',
-        'HOST': '',
+        'ENGINE': os.environ['LIGERCAT2_DB_ENGINE'],
+        'NAME': os.environ['LIGERCAT2_DB_NAME'],
+        'USER': os.environ['LIGERCAT2_DB_USER'],
+        'PASSWORD': os.environ['LIGERCAT2_DB_PASSWORD'],
+        'HOST': 'localhost',
         'PORT': '',
     }
 }
 
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -120,16 +119,43 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
+# https://docs.djangoproject.com/en/1.9/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'node_modules'),
+)
+
 # https://github.com/jrief/django-sass-processor
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'sass_processor.finders.CssFinder',
 ]
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'node_modules'),
-]
+
+# # TODO
+# # Static files (CSS, JavaScript, Images)
+# # https://docs.djangoproject.com/en/2.0/howto/static-files/
+# STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# # https://github.com/jrief/django-sass-processor
+# STATICFILES_FINDERS = [
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+#     'sass_processor.finders.CssFinder',
+# ]
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'node_modules'),
+# )
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

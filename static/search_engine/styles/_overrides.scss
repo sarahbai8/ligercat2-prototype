@@ -1,0 +1,15 @@
+.jquery-modal.blocker {
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+
+    .modal {
+        max-width: 600px;
+        padding: 1.5em 1em;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .close-modal {
+        display: none;
+    }
+}

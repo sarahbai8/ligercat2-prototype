@@ -1,0 +1,140 @@
+%content-container {
+    max-width: $content-max-width;
+    margin: 0 auto;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, $color-background-blue 0%, $color-background-gray 100%);
+    background-color: $color-background-gray;
+
+    &__nav {
+        height: $nav-height;
+        background-color: $color-background-offwhite;
+    }
+    &__content {
+        height: calc(100vh - #{$nav-height});
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+    }
+    &__hero {
+        @extend %content-container;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 30vw;
+        text-align: center;
+    }
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    padding: 0 ($spacing * 2);
+
+    &__logo {
+        height: 40%;
+    }
+    &__body {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        width: 100%;
+    }
+}
+
+.display-container {
+    padding: ($spacing * 2) $spacing;
+
+    &--with-bg {
+        background: $color-background-offwhite;
+    }
+    &--bottom-separator {
+        border-bottom: 1px solid lightgray;
+    }
+
+    &__title {
+        margin: $spacing 0 ($spacing * 1.5) 0;
+    }
+}
+
+.float-item {
+    position: absolute;
+    bottom: 10%;
+    width: 50%;
+    max-width: 500px;
+    max-height: 85%;
+    min-height: 15 * $spacing;
+    padding: 1em 0;
+    background-color: $color-background-offwhite;
+    z-index: 999;
+
+    display: flex;
+    flex-direction: column;
+
+    &--position {
+        &-left {
+            right: calc(50% + 0.5em);
+        }
+        &-right {
+            left: calc(50% + 0.5em);
+        }
+    }
+
+    &__header {
+        padding: 1em;
+    }
+    &__body {
+        flex-grow: 1;
+        overflow-y: scroll;
+        padding: 1em;
+        border: 1px solid lightgray;
+        border-width: 1px 0;
+        background-color: #f2f2f2;
+    }
+    &__footer {
+        padding: 1em;
+    }
+}
+
+.content-container {
+    overflow-y: scroll;
+    height: 100%;
+    padding-bottom: 3em;
+}
+
+.layout-container {
+    display: flex;
+    position: relative;
+    justify-content: flex-end;
+
+    &--align-baseline {
+        align-items: baseline;
+    }
+
+    &__item {
+        width: 50%;
+        margin-right: $spacing;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &--full-width {
+            width: 100%;
+        }
+        &--auto-width {
+            width: auto;
+        }
+        &--no-shrink {
+            flex-shrink: 0;
+        }
+    }
+}
+
+.centered-contents {
+    @extend %content-container;
+}
