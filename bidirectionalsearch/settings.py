@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
-import dj_database_url
 import os
 
 # Quick-start development settings - unsuitable for production
@@ -73,7 +72,16 @@ WSGI_APPLICATION = 'bidirectionalsearch.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = { 'default': dj_database_url.config(conn_max_age=600, ssl_require=True) }
+DATABASES = {
+    'default': {
+        'ENGINE': os.environ['LIGERCAT2_DB_ENGINE'],
+        'NAME': os.environ['LIGERCAT2_DB_NAME'],
+        'USER': os.environ['LIGERCAT2_DB_USER'],
+        'PASSWORD': os.environ['LIGERCAT2_DB_PASSWORD'],
+        'HOST': os.environ['LIGERCAT2_DB_HOST'],
+        'PORT': '',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
